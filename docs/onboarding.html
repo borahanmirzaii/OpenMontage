@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OpenMontage — Developer Onboarding</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --panel: #161b22;
+    --panel-2: #1c2330;
+    --border: #2d333b;
+    --text: #e6edf3;
+    --muted: #9aa7b4;
+    --accent: #f78166;
+    --accent-2: #58a6ff;
+    --green: #56d364;
+    --yellow: #e3b341;
+    --code-bg: #0b0f14;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: radial-gradient(1200px 600px at 80% -10%, #1b2230 0%, var(--bg) 55%);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.65;
+    font-size: 16px;
+  }
+  .wrap { display: grid; grid-template-columns: 260px 1fr; max-width: 1280px; margin: 0 auto; }
+  /* Sidebar */
+  nav {
+    position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto;
+    padding: 32px 20px; border-right: 1px solid var(--border); background: rgba(13,17,23,0.6);
+  }
+  nav .brand { font-weight: 700; font-size: 18px; letter-spacing: -0.02em; margin-bottom: 4px; }
+  nav .brand span { color: var(--accent); }
+  nav .sub { color: var(--muted); font-size: 12px; margin-bottom: 24px; text-transform: uppercase; letter-spacing: 0.08em; }
+  nav a {
+    display: block; color: var(--muted); text-decoration: none; font-size: 14px;
+    padding: 6px 10px; border-radius: 6px; margin: 2px 0; border-left: 2px solid transparent;
+  }
+  nav a:hover { color: var(--text); background: var(--panel); }
+  nav a.section { margin-top: 14px; color: var(--text); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; }
+  /* Main */
+  main { padding: 48px 56px 120px; min-width: 0; }
+  header.hero { margin-bottom: 48px; }
+  header.hero h1 { font-size: 40px; letter-spacing: -0.03em; margin: 0 0 8px; }
+  header.hero h1 span { color: var(--accent); }
+  header.hero .tagline { color: var(--muted); font-size: 18px; max-width: 60ch; }
+  .pill { display:inline-block; font-size:12px; font-family:var(--mono); color:var(--accent-2); border:1px solid var(--border); border-radius:999px; padding:3px 10px; margin-top:16px; }
+  h2 { font-size: 26px; letter-spacing: -0.02em; margin: 56px 0 18px; padding-bottom: 8px; border-bottom: 1px solid var(--border); scroll-margin-top: 24px; }
+  h3 { font-size: 19px; margin: 32px 0 10px; color: var(--text); }
+  p { color: #cdd6e0; }
+  a { color: var(--accent-2); }
+  code { font-family: var(--mono); font-size: 0.88em; background: var(--code-bg); padding: 2px 6px; border-radius: 5px; border: 1px solid var(--border); color: #e6edf3; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; overflow-x: auto; font-family: var(--mono); font-size: 13.5px; line-height: 1.6; }
+  pre code { background: none; border: none; padding: 0; }
+  .thesis {
+    background: linear-gradient(135deg, #1d2533, #161b22);
+    border: 1px solid var(--border); border-left: 4px solid var(--accent);
+    border-radius: 12px; padding: 24px 28px; margin: 24px 0;
+  }
+  .thesis strong { color: var(--accent); }
+  .intuition {
+    background: var(--panel); border: 1px solid var(--border); border-left: 4px solid var(--accent-2);
+    border-radius: 10px; padding: 14px 20px; margin: 18px 0;
+  }
+  .intuition::before { content: "🔑 Intuition"; display:block; font-size:12px; font-weight:700; color:var(--accent-2); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px; }
+  .warn {
+    background: var(--panel); border: 1px solid var(--border); border-left: 4px solid var(--yellow);
+    border-radius: 10px; padding: 14px 20px; margin: 18px 0;
+  }
+  .warn::before { content: "⚠️ Watch out"; display:block; font-size:12px; font-weight:700; color:var(--yellow); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px; }
+  table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 14.5px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+  tr:hover td { background: var(--panel); }
+  td code { white-space: nowrap; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 20px 0; }
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; }
+  .card h4 { margin: 0 0 6px; font-size: 15px; }
+  .card .num { font-family: var(--mono); color: var(--accent); font-size: 12px; }
+  .card p { margin: 6px 0 0; font-size: 13.5px; color: var(--muted); }
+  .flow { font-family: var(--mono); font-size: 13px; color: var(--green); background: var(--code-bg); border:1px solid var(--border); border-radius:10px; padding:16px 20px; overflow-x:auto; }
+  .layer { display:flex; align-items:center; gap:16px; padding:14px 18px; border:1px solid var(--border); border-radius:10px; margin:10px 0; background:var(--panel); }
+  .layer .tag { font-family:var(--mono); font-size:12px; font-weight:700; padding:4px 10px; border-radius:6px; white-space:nowrap; }
+  .l1 { background:#1f2d22; color:var(--green); }
+  .l2 { background:#1f2533; color:var(--accent-2); }
+  .l3 { background:#2d2620; color:var(--yellow); }
+  .layer .body b { color: var(--text); } .layer .body { font-size:14px; color:var(--muted); }
+  footer { margin-top: 80px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+  @media (max-width: 880px) {
+    .wrap { grid-template-columns: 1fr; }
+    nav { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+    main { padding: 32px 22px 80px; }
+    header.hero h1 { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <div class="brand">Open<span>Montage</span></div>
+    <div class="sub">Dev Onboarding</div>
+    <a class="section">Orientation</a>
+    <a href="#tldr">The one idea</a>
+    <a href="#why">Why build it this way</a>
+    <a class="section">Architecture</a>
+    <a href="#layers">Three knowledge layers</a>
+    <a href="#primitives">Four core primitives</a>
+    <a href="#governance">Governance layer</a>
+    <a class="section">Practical</a>
+    <a href="#navigate">Navigating the repo</a>
+    <a href="#preflight">Mandatory preflight</a>
+    <a href="#watch">Watch out for</a>
+    <a href="#addtool">Add a tool</a>
+    <a href="#deeper">Go deeper</a>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <h1>Open<span>Montage</span> — Developer Onboarding</h1>
+      <div class="tagline">A senior-dev orientation to <em>how this repo thinks</em>, not just what it contains. Read this once, and the rest of the codebase stops looking strange.</div>
+      <div class="pill">branch: onboarding</div>
+    </header>
+
+    <section id="tldr">
+      <h2>The one idea that explains everything</h2>
+      <div class="thesis">
+        <strong>The AI agent is the runtime.</strong> Python is only a library of capabilities + a persistence layer.
+        Everything you'd normally write as orchestration code — control flow, branching, retries, creative decisions, review logic — lives in <strong>instructions</strong> (YAML manifests + Markdown skills) that the model reads and executes.
+      </div>
+      <p>If you arrive expecting a <code>main.py</code> orchestrator with a <code>StateMachine</code> class, you will waste an hour hunting for it. <strong>It does not exist, on purpose.</strong></p>
+      <div class="flow">The state machine  = a YAML manifest (pipeline_defs/*.yaml)
+The executor       = the LLM following AGENT_GUIDE.md
+The "functions"    = tools (Python BaseTool subclasses)
+The "stdlib docs"  = skills (Markdown)</div>
+      <p>Internalize that mapping and the whole repo snaps into focus.</p>
+    </section>
+
+    <section id="why">
+      <h2>Why build it this way?</h2>
+      <p>Traditional video tools hardcode the pipeline: <em>generate script → call TTS → render → mux</em>. The moment you want a different creative treatment, you edit code.</p>
+      <p>OpenMontage flips it. The <b>pipeline is data</b> (YAML), the <b>know-how is prose</b> (Markdown), and the <b>only code is the irreducible capability</b> (call ElevenLabs, run FFmpeg, render Remotion). The bet: an LLM following good written instructions makes better creative + routing decisions than branching <code>if/else</code> ever could — <em>and</em> you change behavior by editing Markdown instead of shipping code.</p>
+      <div class="cards">
+        <div class="card"><div class="num">01</div><h4>No Python orchestrator</h4><p>No Python reviewer, no Python handlers. Python that makes a creative or routing decision is treated as a <em>bug</em>.</p></div>
+        <div class="card"><div class="num">02</div><h4>Runtime capability discovery</h4><p>The same repo behaves differently on two machines — "what can I do" is a live function of which API keys + binaries are present.</p></div>
+        <div class="card"><div class="num">03</div><h4>Typed contracts at every seam</h4><p>Stages hand off via canonical JSON artifacts validated against <code>schemas/artifacts/</code>. A stage is swappable if it emits a valid artifact.</p></div>
+      </div>
+    </section>
+
+    <section id="layers">
+      <h2>The three knowledge layers</h2>
+      <div class="layer"><div class="tag l1">Layer 1 · tools/</div><div class="body"><b>WHAT exists</b>, is it available, what's it cost — Python, runtime truth.</div></div>
+      <div class="layer"><div class="tag l2">Layer 2 · skills/</div><div class="body"><b>HOW OpenMontage uses it</b> in a pipeline — Markdown, project conventions.</div></div>
+      <div class="layer"><div class="tag l3">Layer 3 · .agents/skills/</div><div class="body"><b>HOW the underlying tech works</b> — Markdown, vendor knowledge.</div></div>
+      <p>The bridge from Layer 1 → Layer 3 is <strong>one field</strong> on every tool: <code>agent_skills: [...]</code>. That is the pointer the agent follows to load provider-specific prompting <em>before</em> it ever calls a model.</p>
+      <div class="intuition">The gap between a generic prompt and a "cinematic" one is mechanically <em>just this field</em>. Layer 2 tells you <b>what &amp; when</b>; Layer 3 tells you <b>how</b>. Skip Layer 3 and you get usable-but-bland output.</div>
+      <p><b>Reading order the repo wants from you:</b></p>
+      <div class="flow">registry  →  Layer 2 pipeline/stage skill  →  Layer 3 vendor skill  →  only then .py</div>
+      <p>Source-diving into <code>.py</code> is explicitly sanctioned for <b>debugging &amp; audits</b> — just not for normal usage. When a skill and the code disagree, the code wins, and you fix the skill afterward.</p>
+    </section>
+
+    <section id="primitives">
+      <h2>The four primitives you actually need</h2>
+
+      <h3>1 · <code>BaseTool</code> — the capability contract · <code>tools/base_tool.py</code></h3>
+      <p>Every tool is an ABC subclass. The interesting part is <strong>not</strong> <code>execute()</code> — it's the rich self-describing contract each tool carries:</p>
+      <table>
+        <tr><th>Field</th><th>Why it matters</th></tr>
+        <tr><td><code>runtime</code></td><td><code>LOCAL</code> / <code>LOCAL_GPU</code> / <code>API</code> / <code>HYBRID</code> — drives cost + availability story</td></tr>
+        <tr><td><code>dependencies</code></td><td><code>env:FOO</code>, <code>cmd:ffmpeg</code>, <code>python:torch</code> — checked live by <code>check_dependencies()</code></td></tr>
+        <tr><td><code>determinism</code></td><td><code>DETERMINISTIC</code> / <code>SEEDED</code> / <code>STOCHASTIC</code> — reproducibility contract</td></tr>
+        <tr><td><code>fallback_tools</code></td><td>graceful degradation path</td></tr>
+        <tr><td><code>agent_skills</code></td><td>the Layer 1 → Layer 3 bridge</td></tr>
+        <tr><td><code>estimate_cost()</code></td><td>feeds budget governance</td></tr>
+      </table>
+      <p><code>get_status()</code> literally <em>tries</em> <code>check_dependencies()</code> and reports <code>AVAILABLE</code> / <code>UNAVAILABLE</code> / <code>DEGRADED</code>. <strong>Availability is computed, not declared</strong> — that's what makes the "0/13 configured" preflight menus honest.</p>
+      <div class="warn">
+        <ul style="margin:0; padding-left:18px;">
+          <li>Tool classes are <b>PascalCase with NO <code>Tool</code> suffix</b> → <code>VideoCompose</code>, not <code>VideoComposeTool</code>.</li>
+          <li>Invoke via <code>.execute(dict)</code> → returns <code>ToolResult</code>. <b>Never <code>.run()</code>.</b></li>
+          <li><code>ToolResult</code> has <code>.success</code>, <code>.data</code>, <code>.error</code>, <code>.cost_usd</code>, <code>.seed</code>, <code>.model</code>.</li>
+        </ul>
+      </div>
+
+      <h3>2 · <code>ToolRegistry</code> — discovery · <code>tools/tool_registry.py</code></h3>
+      <p><code>discover()</code> walks the <code>tools/</code> package tree with <code>pkgutil</code> and auto-registers every concrete <code>BaseTool</code> subclass.</p>
+      <div class="intuition">Drop a new tool file into the right package and it is discovered with <b>zero wiring</b>. No central registration list to edit.</div>
+      <p>The agent queries it through <code>provider_menu_summary()</code> (the human-ready preflight rollup — use first), <code>capability_catalog()</code> (grouped by capability), and <code>provider_catalog()</code> (grouped by provider).</p>
+
+      <h3>3 · The selector pattern — capability routing</h3>
+      <p>For multi-provider families there is a <b>router tool + N provider tools</b>:</p>
+      <table>
+        <tr><th>Selector</th><th>Routes to</th></tr>
+        <tr><td><code>tts_selector</code></td><td>ElevenLabs / Google / OpenAI / Piper / Doubao</td></tr>
+        <tr><td><code>image_selector</code></td><td>FLUX / Imagen / DALL-E / Recraft …</td></tr>
+        <tr><td><code>video_selector</code></td><td>Kling / LTX / Seedance / Wan / Hunyuan …</td></tr>
+      </table>
+      <p>Selectors <b>auto-discover</b> their providers via <code>registry.get_by_capability(...)</code>. Add a provider → it appears with <b>no selector edits</b>. Routing priority: <b>user preference &gt; availability &gt; discovery order.</b></p>
+
+      <h3>4 · Pipeline manifest — the declarative state machine · <code>pipeline_defs/*.yaml</code></h3>
+      <p>This is where the "orchestrator" actually lives. Each stage declares:</p>
+      <table>
+        <tr><th>Manifest key</th><th>Meaning</th></tr>
+        <tr><td><code>skill</code></td><td>the director skill that teaches the agent HOW</td></tr>
+        <tr><td><code>produces</code></td><td>the canonical output artifact</td></tr>
+        <tr><td><code>required_artifacts_in</code></td><td>input contract from prior stages</td></tr>
+        <tr><td><code>tools_available</code></td><td>capability scope (+ <code>required_tools</code> / <code>optional_tools</code>)</td></tr>
+        <tr><td><code>review_focus</code></td><td>what self-review checks</td></tr>
+        <tr><td><code>success_criteria</code></td><td>the gate to pass the stage</td></tr>
+        <tr><td><code>human_approval_default</code></td><td>checkpoint policy</td></tr>
+      </table>
+      <div class="flow">research → proposal → script → scene_plan → assets → edit → compose → publish</div>
+      <div class="intuition"><em>Creative</em> stages (idea, script, scene_plan) gate on human approval; <em>technical</em> stages (assets, edit, compose) auto-proceed. The split reflects where human judgement actually adds value.</div>
+    </section>
+
+    <section id="governance">
+      <h2>The governance layer (the "production-grade" part)</h2>
+      <p>This is what separates OpenMontage from a toy agent demo. Three hard rules, enforced as <strong>contract violations</strong> (the reviewer flags them as CRITICAL):</p>
+      <table>
+        <tr><th>Rule</th><th>What it prevents</th></tr>
+        <tr><td><b>Announce before spend</b></td><td>Agent must state tool / provider / model / cost <em>before</em> any paid call</td></tr>
+        <tr><td><b>No silent substitution</b></td><td>If a locked render runtime is unavailable, the agent escalates a <em>structured blocker</em> — not a quiet engine swap</td></tr>
+        <tr><td><b>Present both composition runtimes</b></td><td>When Remotion <em>and</em> HyperFrames both exist, surface both — never a silent default</td></tr>
+      </table>
+      <p><code>render_runtime</code> is <b>locked at proposal</b> and carried through <code>edit_decisions</code> unchanged. <code>video_compose</code> dispatches on that field to one of three engines:</p>
+      <table>
+        <tr><th>Engine</th><th>Best for</th><th>Requires</th></tr>
+        <tr><td><b>FFmpeg</b></td><td>cuts, concat, trim, subtitle burn</td><td><code>ffmpeg</code> (always present)</td></tr>
+        <tr><td><b>Remotion</b></td><td>React scenes: stat cards, charts, callouts, spring transitions</td><td>Node + <code>remotion-composer/</code></td></tr>
+        <tr><td><b>HyperFrames</b></td><td>HTML/CSS/GSAP: kinetic type, product promos, SVG rigs</td><td>Node ≥ 22 + FFmpeg + <code>npx</code></td></tr>
+      </table>
+      <p>A <code>decision_log</code> artifact records <code>options_considered</code> / <code>rejected_because</code> — a literal audit trail for <em>why</em> each provider/runtime was chosen.</p>
+      <div class="intuition">"Motion is a hard requirement" — a brief that promises moving shots may <b>not</b> be silently downgraded to a Ken Burns slideshow. If the chosen engine is unavailable, the agent stops and asks; it does not improvise a cheaper path.</div>
+    </section>
+
+    <section id="navigate">
+      <h2>How to navigate the repo</h2>
+      <table>
+        <tr><th>You want…</th><th>Go to</th></tr>
+        <tr><td>The agent contract you're bound by</td><td><code>AGENT_GUIDE.md</code></td></tr>
+        <tr><td>Architecture truth (no duplication)</td><td><code>PROJECT_CONTEXT.md</code> + <code>docs/ARCHITECTURE.md</code></td></tr>
+        <tr><td>What tools exist <em>right now</em></td><td><code>registry.discover()</code> — never trust docs</td></tr>
+        <tr><td>How a stage should behave</td><td><code>skills/pipelines/&lt;pipeline&gt;/&lt;stage&gt;-director.md</code></td></tr>
+        <tr><td>Checkpoint / review policy</td><td><code>skills/meta/</code> + manifest <code>human_approval_default</code></td></tr>
+        <tr><td>Add a tool</td><td>subclass <code>BaseTool</code>, drop in right <code>tools/&lt;family&gt;/</code> — discovery is automatic</td></tr>
+        <tr><td>Add a pipeline</td><td>YAML manifest + director skills + contract tests</td></tr>
+        <tr><td>Persistence / state</td><td><code>lib/checkpoint.py</code>; <code>pipelines/&lt;project_id&gt;/checkpoint_&lt;stage&gt;.json</code></td></tr>
+        <tr><td>Budget governance</td><td><code>tools/cost_tracker.py</code> (estimate → reserve → reconcile)</td></tr>
+      </table>
+    </section>
+
+    <section id="preflight">
+      <h2>Mandatory preflight (run first, every session)</h2>
+      <pre><code>python -c "
+from tools.tool_registry import registry
+import json
+registry.discover()
+print(json.dumps(registry.provider_menu_summary(), indent=2))
+"</code></pre>
+      <p>It returns four fields to translate into plain language for the user:</p>
+      <ul>
+        <li><code>composition_runtimes</code> — booleans for ffmpeg / remotion / hyperframes</li>
+        <li><code>capabilities[]</code> — <code>configured / total</code> counts per capability family</li>
+        <li><code>setup_offers[]</code> — unavailable tools fixable with a 1-minute env-var</li>
+        <li><code>runtime_warnings[]</code> — silent-failure signals to surface verbatim</li>
+      </ul>
+    </section>
+
+    <section id="watch">
+      <h2>The honest "watch out for" list</h2>
+      <div class="warn">
+        <ul style="margin:0; padding-left:18px;">
+          <li><b>The intelligence is in Markdown, not code.</b> Bugs often live in stale skill files, not <code>.py</code>. Grep <code>skills/</code> as readily as <code>tools/</code>.</li>
+          <li><b>Beta pipelines</b> (<code>talking-head</code>, <code>clip-factory</code>, <code>character-animation</code>, …) aren't fully audited — expect rough edges; tell the user.</li>
+          <li><b>Never write ad-hoc scripts to call tools directly.</b> That's the cardinal sin (Rule Zero). Everything routes through a pipeline — or the reviewer flags it.</li>
+          <li><b><code>projects/</code> is gitignored.</b> All generated assets are regenerable; never committed.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="addtool">
+      <h2>Add-a-tool, in practice</h2>
+      <pre><code>1. Inherit from tools/base_tool.py::BaseTool
+2. Put it in the right capability package (tools/audio/, tools/video/, ...)
+3. Prefer the selector + provider pattern (one router, one tool per backend)
+4. Set every contract field — capability, provider, supports,
+   fallback_tools, agent_skills
+5. Implement execute() → return a ToolResult
+6. Let tool_registry.discover() find it. No ad-hoc imports.
+7. Add a JSON schema in schemas/tools/ if I/O is complex
+8. Add tests AFTER the runtime path is correct</code></pre>
+    </section>
+
+    <section id="deeper">
+      <h2>Where to go deeper</h2>
+      <div class="cards">
+        <div class="card"><h4>Operating it</h4><p>Run the preflight, then walk a pipeline end-to-end.</p></div>
+        <div class="card"><h4>Extending tools</h4><p>Trace <code>video_compose</code>'s runtime-routing — the most intricate tool.</p></div>
+        <div class="card"><h4>Contract internals</h4><p><code>lib/checkpoint.py</code> + <code>skills/meta/reviewer.md</code> + <code>checkpoint-protocol.md</code>.</p></div>
+      </div>
+    </section>
+
+    <footer>
+      Generated as part of the <code>onboarding</code> branch · OpenMontage developer orientation.
+    </footer>
+  </main>
+</div>
+</body>
+</html>
